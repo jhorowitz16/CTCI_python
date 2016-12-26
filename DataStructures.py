@@ -106,6 +106,61 @@ def palindrome_perm(s):
     
 
 
+# ================== chapter 2 =================== #
+
+class Link:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+    def compare_to(a, target):
+        if not a and not target:
+            return True
+        if (a and not target) or (a and not target):
+            return False
+        if a.val != target.val:
+            return False
+        return Link.compare_to(a.next, target.next)
+
+    def len(self):
+        c = 0
+        while(self):
+            self = self.next
+            c += 1
+        return c
+
+    def append(self, target):
+        self.next = target
+
+    def __str__(self):
+        return '(' + str(self.val) + ', ' + str(self.next) + ')'
+
+    def __repr__(self):
+        return str(self)
+
+
+def rdl(head):
+    """
+    remove duplicate link - solved recursively
+    keep track of previous (start None) and curr (start head)
+    if current in seen? skip it by changing prev's next
+        shift over
+    """
+    
+    seen = {}
+    prev = None
+    curr = head
+    while curr:
+        if curr.val in seen:
+            prev.next = curr.next
+        else:
+            seen[curr.val] = True
+            prev = curr
+        curr = curr.next
+    return head
+         
+
+
         
 # ================== utils =================== #
 
@@ -114,35 +169,49 @@ def test(call, result):
     if call != result:
         raise ValueError("test failed")
 
-if __name__ == '__main__':
 
-    # 1.1 - unique chars
-    test(is_all_unique_chars("abcde"), True)
-    test(is_all_unique_chars("thelazydog"), True)
-    test(is_all_unique_chars("hello"), False)
-    test(is_all_unique_no_space("abcde"), True)
-    test(is_all_unique_no_space("thelazydog"), True)
-    test(is_all_unique_no_space("hello"), False)
+# 1.1 - unique chars
+test(is_all_unique_chars("abcde"), True)
+test(is_all_unique_chars("thelazydog"), True)
+test(is_all_unique_chars("hello"), False)
+test(is_all_unique_no_space("abcde"), True)
+test(is_all_unique_no_space("thelazydog"), True)
+test(is_all_unique_no_space("hello"), False)
 
-    # 1.2 - permutations
-    test(is_permutation("lol", "lol"), True)
-    test(is_permutation("abcde", "abced"), True)
-    test(is_permutation("lol", "lolz"), False)
-    test(is_permutation("123456asdfasdf", "12313asdfasdf"), False)
+# 1.2 - permutations
+test(is_permutation("lol", "lol"), True)
+test(is_permutation("abcde", "abced"), True)
+test(is_permutation("lol", "lolz"), False)
+test(is_permutation("123456asdfasdf", "12313asdfasdf"), False)
 
-    # 1.3 - %20 replacements
-    test(percent_20_replacements("hello world test"), 
-            "hello%20world%20test")
-    test(percent_20_in_place("hello world test", 16), 
-            "hello%20world%20test")
+# 1.3 - %20 replacements
+test(percent_20_replacements("hello world test"), 
+        "hello%20world%20test")
+test(percent_20_in_place("hello world test", 16), 
+        "hello%20world%20test")
 
-    # 1.4 - palindrome perm
-    test(palindrome_perm("tactcoa"), True)
-    test(palindrome_perm("lool"), True)
-    test(palindrome_perm("o"), True)
-    test(palindrome_perm("oo"), True)
-    test(palindrome_perm("abc"), False)
-    test(palindrome_perm("abbb"), False)
+# 1.4 - palindrome perm
+test(palindrome_perm("tactcoa"), True)
+test(palindrome_perm("lool"), True)
+test(palindrome_perm("o"), True)
+test(palindrome_perm("oo"), True)
+test(palindrome_perm("abc"), False)
+test(palindrome_perm("abbb"), False)
+
+# 2.1 - remove duplicates from a linked list
+empty = Link()
+one = Link(1)
+one_two = Link(1, Link(2))
+one_one = Link(1, Link(1))
+two_one = Link(2, Link(1))
+one_one_one_one = Link(1, Link(1, one_one))
+two_two_one_one = Link(2, Link(2, one_one))
+test(Link.compare_to(one_one, Link(1, Link(1))), True)
+test(Link.compare_to(rdl(one_two), rdl(one)), False)
+test(Link.compare_to(rdl(one_two), rdl(one_two)), True)
+test(Link.compare_to(rdl(one_two), rdl(one_one)), False)
+test(Link.compare_to(rdl(one_one_one_one), one), True)
+test(Link.compare_to(rdl(two_two_one_one), two_one), True)
 
 
-    
+
