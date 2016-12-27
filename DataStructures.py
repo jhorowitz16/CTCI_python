@@ -159,13 +159,40 @@ def rdl(head):
         curr = curr.next
     return head
          
+def kth_to_first(head, k):
+    """
+    alt helper...
+    """
+    if k == 0:
+        return head
+    else:
+        return kth_to_first(head.next, k - 1)
 
+def kth_to_last(head, k):
+    """
+    assumptions:
+    1) k <= len of the list 
+    2) k = 1 is the last element
+    """
+    list_len = head.len()
+    while k < list_len:
+        head = head.next
+        k += 1
+    return head
+
+def remove_mid_link(target):
+    if not target or not target.next:
+        # can't be at the end
+        return False
+    next = target.next
+    target.val = next.val
+    target.next = next.next
 
         
 # ================== utils =================== #
 
 
-def test(call, result):
+def test(call, result=True):
     if call != result:
         raise ValueError("test failed")
 
@@ -212,6 +239,29 @@ test(Link.compare_to(rdl(one_two), rdl(one_two)), True)
 test(Link.compare_to(rdl(one_two), rdl(one_one)), False)
 test(Link.compare_to(rdl(one_one_one_one), one), True)
 test(Link.compare_to(rdl(two_two_one_one), two_one), True)
+
+# 2.2 - return kth to last element from a linked list
+one_one = Link(1, Link(1))
+two_two_one_one = Link(2, Link(2, one_one))
+ktl = kth_to_last 
+test(Link.compare_to(ktl(two_two_one_one, 1), Link(1)), True)
+test(Link.compare_to(ktl(two_two_one_one, 1), Link(2)), False)
+test(Link.compare_to(ktl(two_two_one_one, 2), one_one), True)
+test(Link.compare_to(ktl(two_two_one_one, 2), one_one_one_one), False)
+test(Link.compare_to(ktl(two_two_one_one, 4), two_two_one_one), True)
+
+# 2.3 - delete a middle mode from a linked list
+the_list = Link(1, Link(2, Link(3)))
+mid = the_list.next
+ends = Link(1, Link(3))
+second_list = Link(1, Link(2, Link(3, Link(4))))
+second_mid = second_list.next
+rest = Link(1, Link(3, Link(4)))
+rml = remove_mid_link
+rml(mid)
+test(Link.compare_to(the_list, ends))
+rml(second_mid)
+test(Link.compare_to(second_list, rest))
 
 
 
