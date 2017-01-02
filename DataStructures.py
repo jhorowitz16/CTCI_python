@@ -103,6 +103,62 @@ def palindrome_perm(s):
             my_dict[c] = True
 
     return len(my_dict) <= 1
+
+
+def one_away(a, b):
+    """
+    three options - insert, remove or replace
+    """
+
+    def replace_check(s1, s2):
+        """
+        check if replacing a single character in s1 becomes s2
+        """
+        if len(s1) != len(s2):
+            return False
+        found_diff = False
+        for i in range(len(s1)):
+            if s1[i] != s2[i]:
+                if found_diff:
+                    return False
+                found_diff = True
+        return True
+
+    
+    def insert_check(s1, s2):
+        """
+        inserting a char into s1 becomes s2
+        """
+        m = len(s1)
+        n = len(s2)
+        if m + 1 != n:
+            return False
+        i, j = 0, 0
+        inserted = False
+        while i < m and j < n:
+            if s1[i] != s2[j]:
+                if inserted:
+                    return False
+                inserted = True
+                j += 1
+            i += 1
+            j += 1
+        return True
+
+    m = len(a)
+    n = len(b)
+    if m == n:
+        return replace_check(a, b)
+    if m > n:
+        return insert_check(b, a)
+    return insert_check(a, b)
+
+
+        
+
+
+
+
     
 
 
@@ -180,13 +236,78 @@ def kth_to_last(head, k):
         k += 1
     return head
 
+# make a ruler of length k (gap between two nodes)
+# then slide both down till the end lol
+
 def remove_mid_link(target):
+    """
+    take the target node, and make it grab its next's info
+    """
+
     if not target or not target.next:
         # can't be at the end
         return False
     next = target.next
     target.val = next.val
     target.next = next.next
+
+def partition_ll(head, target):
+    """
+    build a before list and an after list
+    """
+    val = target.val
+    all_vals = []
+    n = head
+    while (n):
+        all_vals.append(n.val)
+        n = n.next
+    all_vals.sort()
+    if all_vals:
+        new_head = Link(all_vals[0])
+        new_tail = new_head
+    for v in all_vals[1:]:
+        new_tail.next = Link(v)
+        new_tail = new_tail.next
+    return new_head 
+
+    
+def sum_ll(a, b):
+    """
+    turn a linked list into a number, then conventionally add them
+    """
+    def link_to_num(link):
+        """
+        Link(7, Link(1, Link(6))) becomes 617
+        """
+        val = 0
+        place = 1
+        while link:
+            val += (link.val * place)
+            place *= 10
+            link = link.next
+        return val 
+
+    def num_to_link(num):
+        """
+        617 becomes Link(7, Link(1, Link(6))) 
+        gets the ones, then get the tens etc...
+        """
+        
+        link = Link(num % 10)
+        head = link
+        while num >= 10:
+            num = num // 10
+            link.next = Link(num % 10)
+            link = link.next
+        return head 
+
+    return num_to_link(link_to_num(a) + link_to_num(b)) 
+        
+
+
+
+
+
 
         
 # ================== utils =================== #
@@ -224,6 +345,13 @@ test(palindrome_perm("o"), True)
 test(palindrome_perm("oo"), True)
 test(palindrome_perm("abc"), False)
 test(palindrome_perm("abbb"), False)
+
+oa = one_away
+# 1.5 - one away
+test(oa("pale", "ple"))
+test(oa("pales", "pale"))
+test(oa("pale", "bale"))
+test(oa("pale","bake"), False)
 
 # 2.1 - remove duplicates from a linked list
 empty = Link()
@@ -263,5 +391,16 @@ test(Link.compare_to(the_list, ends))
 rml(second_mid)
 test(Link.compare_to(second_list, rest))
 
+# 2.4 partition a linked list around x
+
+in_l =  Link(3, Link(5, Link(8, Link(5, Link(10, Link(2, Link(1)))))))
+out_l = Link(1, Link(2, Link(3, Link(5, Link(5, Link(8, Link(10)))))))
+test(Link.compare_to(partition_ll(in_l, in_l.next), out_l)) 
+
+# 2.5 sum linked list representations of numbers
+six_one_seven = Link(7, Link(1, Link(6)))
+two_nine_five = Link(5, Link(9, Link(2)))
+nine_one_two = Link(2, Link(1, Link(9)))
+test(Link.compare_to(sum_ll(six_one_seven, two_nine_five), nine_one_two))
 
 
