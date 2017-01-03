@@ -154,11 +154,53 @@ def one_away(a, b):
     return insert_check(a, b)
 
 
-        
+def str_compress(s):
+    """
+    take the string - reduce to single instance with count
+    """
+    count = 0
+    last = ''
+    ret_str = ''
+    for i in range(len(s)):
+        if s[i] == last:
+            count += 1
+        else:
+            if last:
+                ret_str += last + str(count)
+            last = s[i]
+            count = 1
+    ret_str += last + str(count) 
+    return ret_str
 
 
-
-
+def rotate_matrix(M):
+    """
+    assume given a square matrix
+    layer by layer
+    save temp for top
+    top is set to left
+    left is set to bot
+    bot is set to right
+    right is set to temp
+    change layer
+    """
+    n = len(M)
+    for layer in range(n // 2):
+        first = layer
+        last = n - layer - 1
+        # now do the swap
+        for i in range(first, last):
+            offset = i - first
+            temp_top = M[first][i]
+            # left to top
+            M[first][i] = M[last-offset][first] 
+            # bottom to left
+            M[last-offset][first] = M[last][last-offset] 
+            # right to bottom
+            M[last][last-offset] = M[i][last]
+            # top to right
+            M[i][last] = temp_top
+    return M
     
 
 
@@ -352,6 +394,15 @@ test(oa("pale", "ple"))
 test(oa("pales", "pale"))
 test(oa("pale", "bale"))
 test(oa("pale","bake"), False)
+
+# 1.6 - string compression
+test(str_compress("aabcccccaaa"), "a2b1c5a3")
+
+# 1.7 - rotate matrix
+M = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+M_rot = [[7, 4, 1], [8, 5, 2], [9, 6, 3]]
+rotate_matrix(M)
+test(M, M_rot)
 
 # 2.1 - remove duplicates from a linked list
 empty = Link()
