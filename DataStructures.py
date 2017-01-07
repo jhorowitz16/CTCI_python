@@ -202,6 +202,28 @@ def rotate_matrix(M):
             M[i][last] = temp_top
     return M
     
+def zero_matrix(M):
+    """
+    M is a (m by n) matrix with m rows and n columns
+    for each 0 entry - zero out everythign else
+    """
+    # one pass to find all the zeros (n^2)
+    # populate two lists : cols and rows for zeros
+    # then go thru each element - checking if its in a banned row/col
+    m = len(M)
+    n = len(M[0])
+    rows, cols = [], []
+    for i in range(m):
+        for j in range(n):
+            if M[i][j] == 0:
+                cols.append(i)
+                rows.append(j)
+    for i in range(m):
+        for j in range(n):
+            if i in rows or j in cols:
+                M[i][j] = 0
+                
+    return M
 
 
 # ================== chapter 2 =================== #
@@ -403,6 +425,15 @@ M = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
 M_rot = [[7, 4, 1], [8, 5, 2], [9, 6, 3]]
 rotate_matrix(M)
 test(M, M_rot)
+
+# 1.8 - zero matrix
+M = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+res = zero_matrix(M)
+test(res, M)
+M = [[1, 2, 3], [4, 0, 6], [7, 8, 9]]
+A = [[1, 0, 3], [0, 0, 0], [7, 0, 9]]
+test(zero_matrix(M), A)
+
 
 # 2.1 - remove duplicates from a linked list
 empty = Link()
