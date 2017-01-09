@@ -226,6 +226,25 @@ def zero_matrix(M):
     return M
 
 
+def is_string_rot(a, b):
+    """
+    use a single call of is_substring with
+    abab
+        because it must show up in the ba segement if its going to
+    waterbottlewaterbottle
+       erbottlewat
+    think reductions 
+    """
+    def is_substring(a, b):
+        """
+        return true if a is a substring of b
+        a in b works in python
+        """
+        return a in b
+    aa = a + a 
+    return is_substring(b, aa)
+
+
 # ================== chapter 2 =================== #
 
 class Link:
@@ -368,6 +387,84 @@ def sum_ll(a, b):
     return num_to_link(link_to_num(a) + link_to_num(b)) 
         
 
+def is_link_palindrome(link):
+    """
+    return if linked list is a palindrome
+    maintain a head and tail, then wait till next is tail
+    """
+    if not Link:
+        return 
+    tail = None
+    head = link
+
+    while head:
+        # use a runner to find the tail
+        runner = head
+        while runner.next != tail:
+            runner = runner.next
+        # found it set runner to the one before the tail
+        if runner.val != head.val:
+            return False
+        if runner == head or (head.next == runner):
+            return True
+        tail = runner
+        head = head.next
+    return True
+
+
+def link_intersection(a, b):
+    """
+    return the link that is the intersection between the two lists
+    1 2 3 4 5
+    2 4 5 
+    .... 4 5 are the same branches think of a wishbone
+    ...
+        ...
+     ..
+    """
+    # obs 1 - if they're intersecting, then they have the same ending
+    def find_last(node):
+        """
+        find the last node in a linked list
+        """
+        if not node:
+            return node
+        while node.next:
+            node = node.next
+        return node
+
+    last_a = find_last(a)
+    last_b = find_last(b)
+
+    if last_a != last_b:
+        # no intersection
+        return None 
+
+    # where to find? cut off extra stuff on the longer one
+    # advace one at a time till looking at the same node
+
+    a_len = a.len()
+    b_len = b.len()
+
+    if a_len > b_len:
+        # cut off the diff from a
+        diff = a_len - b_len
+        for _ in range(diff):
+            a = a.next
+    elif a_len < b_len:
+        # cut off the diff from b 
+        diff = b_len - a_len
+        for _ in range(diff):
+            b = b.next
+
+    while a != b:
+        a = a.next
+        b = b.next
+
+    return a
+
+
+    
 
 
 
@@ -434,6 +531,12 @@ M = [[1, 2, 3], [4, 0, 6], [7, 8, 9]]
 A = [[1, 0, 3], [0, 0, 0], [7, 0, 9]]
 test(zero_matrix(M), A)
 
+# 1.9 - string rotation
+orig = "waterbottle"
+rot = "erbottlewat"
+test(is_string_rot(orig, rot))
+test(is_string_rot(orig, "test"), False)
+
 
 # 2.1 - remove duplicates from a linked list
 empty = Link()
@@ -474,7 +577,6 @@ rml(second_mid)
 test(Link.compare_to(second_list, rest))
 
 # 2.4 partition a linked list around x
-
 in_l =  Link(3, Link(5, Link(8, Link(5, Link(10, Link(2, Link(1)))))))
 out_l = Link(1, Link(2, Link(3, Link(5, Link(5, Link(8, Link(10)))))))
 test(Link.compare_to(partition_ll(in_l, in_l.next), out_l)) 
@@ -484,5 +586,23 @@ six_one_seven = Link(7, Link(1, Link(6)))
 two_nine_five = Link(5, Link(9, Link(2)))
 nine_one_two = Link(2, Link(1, Link(9)))
 test(Link.compare_to(sum_ll(six_one_seven, two_nine_five), nine_one_two))
+
+# 2.6 - linked list is a palindrome
+test(is_link_palindrome(six_one_seven), False)
+six_one_one_six = Link(6, Link(1, Link(1, Link(6))))
+six_one_one_one_six = Link(6, Link(1, Link(1, Link(1, Link(6)))))
+six_one_six = Link(6, Link(1, Link(6)))
+
+test(is_link_palindrome(six_one_one_six))
+test(is_link_palindrome(six_one_six))
+test(is_link_palindrome(six_one_one_one_six))
+
+# 2.7 linked list intersection
+one_six = six_one_one_one_six.next.next.next.next
+test(link_intersection(one_six, six_one_one_one_six), one_six)
+test(link_intersection(six_one_one_one_six, one_six), one_six)
+test(link_intersection(one_six, nine_one_two), None)
+
+
 
 
