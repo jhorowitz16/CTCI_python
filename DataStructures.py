@@ -464,6 +464,43 @@ def link_intersection(a, b):
     return a
 
 
+def loop_detect(node):
+    """
+    return true or false if the above linked list has a loop
+    use a slow runner along side a fast runner
+    if they meet - then we found a loop
+    """
+
+    slow = node
+    fast = node
+    while slow and fast:
+        slow = node.next
+        if fast.next and fast.next.next:
+            fast = node.next.next
+        else:
+            # got to the end
+            return False 
+        if slow == fast:
+            return True 
+    return False
+
+
+def find_loop_point(node):
+    """
+    first use loop_detect - to see if there's a loop
+    if there is a loop - return the first node that's a repeat
+    Observations
+        1) they meet after loopsize - k 
+
+    """
+    if not loop_detect(node):
+        return False 
+    
+
+
+
+
+
     
 
 
@@ -602,6 +639,15 @@ one_six = six_one_one_one_six.next.next.next.next
 test(link_intersection(one_six, six_one_one_one_six), one_six)
 test(link_intersection(six_one_one_one_six, one_six), one_six)
 test(link_intersection(one_six, nine_one_two), None)
+
+# 2.8 linked list loop detection
+loop = Link(1, Link(2))
+loop.next = loop
+loop_two = Link(1)
+loop_two.next = loop_two
+test(loop_detect(loop)) 
+test(loop_detect(one_six), False)
+test(loop_detect(loop_two))
 
 
 
