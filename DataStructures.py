@@ -473,15 +473,17 @@ def loop_detect(node):
 
     slow = node
     fast = node
-    while slow and fast:
-        slow = node.next
+    count = 0
+    while slow and fast and count < 10:
+        slow = slow.next
         if fast.next and fast.next.next:
-            fast = node.next.next
+            fast = fast.next.next
         else:
             # got to the end
             return False 
         if slow == fast:
             return True 
+        count += 1
     return False
 
 
@@ -490,20 +492,43 @@ def find_loop_point(node):
     first use loop_detect - to see if there's a loop
     if there is a loop - return the first node that's a repeat
     Observations
-        1) they meet after loopsize - k 
+        1) after k moves slow has moved k and fast has moved 2k
+        2) the difference of k % the loop size is their gap
+        3) we use phase one to find where they meet
+        4) they must meet k moves before the goal node in the loop
+        5) which is dist from head - so move slow and set fast to head
+        6) return the new intersection
 
     """
     if not loop_detect(node):
         return False 
+
+    slow = node
+    fast = node
     
+    done = False
+    while slow and fast and not done:
+        slow = slow.next
+        if fast.next and fast.next.next:
+            fast = fast.next.next
+            if slow == fast:
+                done = True
+                break
+                
+        else:
+            # the fast runner hit the end - can't be a loop
+            return False
 
+    # part 2
+    fast = node  # back to the head
+    while fast != slow:
+        # one at a time... k times
+        fast = fast.next
+        slow = slow.next
 
+    return fast  # or return slow
 
-
-
-    
-
-
+            
 
 
 
@@ -513,6 +538,7 @@ def find_loop_point(node):
 
 def test(call, result=True):
     if call != result:
+        print(call)
         raise ValueError("test failed")
 
 
@@ -649,6 +675,12 @@ test(loop_detect(loop))
 test(loop_detect(one_six), False)
 test(loop_detect(loop_two))
 
-
+# 2.81 linked list loop search
+find_loop_point
+#test(find_loop_point(loop), loop)
+#test(find_loop_point(one_six), False)
+#test(find_loop_point(loop_two), loop_two)
+in_l.next.next.next.next.next.next.next = in_l.next.next
+test(find_loop_point(in_l), in_l.next.next)
 
 
