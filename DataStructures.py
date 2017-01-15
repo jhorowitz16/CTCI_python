@@ -277,6 +277,42 @@ class Link:
     def __repr__(self):
         return str(self)
 
+class DLink:
+    """
+    doubly linked list - for queues and stacks
+    """
+
+    def __init__(self, val=0, next=None, prev=None):
+        self.val = val
+        self.next = next
+        self.prev = prev
+
+
+    def compare_to(a, target):
+        if not a and not target:
+            return True
+        if (a and not target) or (a and not target):
+            return False
+        if a.val != target.val:
+            return False
+        return Link.compare_to(a.next, target.next)
+
+    def len(self):
+        c = 0
+        while(self):
+            self = self.next
+            c += 1
+        return c
+
+    def append(self, target):
+        self.next = target
+        target.prev = self
+
+    def __str__(self):
+        return '(' + str(self.val) + ', ' + str(self.next) + ')'
+
+    def __repr__(self):
+        return str(self)
 
 def rdl(head):
     """
@@ -529,6 +565,73 @@ def find_loop_point(node):
     return fast  # or return slow
 
             
+# ================== chapter 3 =================== #
+
+class Stack():
+    """ 
+    representing the stack as as linked list
+    """
+    def __init__(self, init_list=[]):
+        """
+        can initialize the stack with a python list of values
+        stack object has a head and tail
+        """
+        if init_list:
+            current = DLink(init_list[0])
+            self.head = current
+            for val in init_list[1:]:
+                current.next = DLink(val)
+                current = current.next
+            self.tail = current
+            self.length = len(init_list)
+        else:
+            self.head = None 
+            self.tail = None 
+            self.length = 0
+
+    def peek(self):
+        """
+        return the top element without removing it
+        """
+        return self.head
+
+    def pop(self):
+        """
+        return the top element and remove it
+        """
+        if self.head:
+            temp = self.head
+            self.head = self.head.next
+            self.length -= 1
+            return temp 
+        return None
+
+    def push(self, new_elem):
+        """
+        add something on the top
+        """
+        new_node = Link(new_elem)
+        new_node.next = self.head
+        self.head = new_node
+        self.length += 1
+        return bool(new_elem) 
+
+    def __len__(self):
+        return self.length
+
+    def __str__(self):
+        """
+        call the linked list str
+        """
+        return "Stack: " + str(self.head)
+
+    def __repr__(self):
+        return str(self)
+
+
+
+        
+
 
 
 
@@ -541,6 +644,10 @@ def test(call, result=True):
         print(call)
         raise ValueError("test failed")
 
+
+# ================== tests =================== #
+
+# CHAPTER 1 
 
 # 1.1 - unique chars
 test(is_all_unique_chars("abcde"), True)
@@ -600,6 +707,7 @@ rot = "erbottlewat"
 test(is_string_rot(orig, rot))
 test(is_string_rot(orig, "test"), False)
 
+# CHAPTER 2
 
 # 2.1 - remove duplicates from a linked list
 empty = Link()
@@ -676,11 +784,23 @@ test(loop_detect(one_six), False)
 test(loop_detect(loop_two))
 
 # 2.81 linked list loop search
-find_loop_point
-#test(find_loop_point(loop), loop)
-#test(find_loop_point(one_six), False)
-#test(find_loop_point(loop_two), loop_two)
+test(find_loop_point(loop), loop)
+test(find_loop_point(one_six), False)
+test(find_loop_point(loop_two), loop_two)
 in_l.next.next.next.next.next.next.next = in_l.next.next
 test(find_loop_point(in_l), in_l.next.next)
 
+# CHAPTER 3
+
+# basic Stack checking
+stack = Stack()
+test(len(stack), 0)
+stack.push(1)
+stack.push(2)
+test(len(stack), 2)
+test(stack.head.val, 2)
+
+test(stack.pop().val, 2)
+test(stack.pop().val, 1)
+test(stack.pop(), None)
 
