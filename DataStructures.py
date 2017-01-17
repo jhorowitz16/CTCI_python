@@ -629,10 +629,91 @@ class Stack():
         return str(self)
 
 
+# single array to manage three stacks
+class TripleStack():
+    """
+    single array - 3 stacks inside
+    """
+    def __init__(self):
+        """
+        counts - use this to find where in the array to go
 
+        """
+        self.main_list = []
+        self.first = 0 
+        self.second = 0 
+        self.third = 0 
+
+
+    # PEEK COMMANDS 
+
+    def peek_one(self):
+        if self.first:
+            return self.main_list[0]
+        else:
+            return "First Stack indefined"
+
+    def peek_two(self):
+        if self.second:
+            return self.main_list[self.first]
+        else:
+            return "Second Stack indefined"
         
+    def peek_three(self):
+        if self.third:
+            return self.main_list[self.first + self.second]
+        else:
+            return "Third Stack indefined"
 
+    # POP COMMANDS
 
+    def pop_one(self):
+        if self.first:
+            head = self.main_list[0]
+            self.main_list = self.main_list[1:]
+            self.first -= 1
+            return head
+        else:
+            return "First Stack indefined"
+
+    def pop_two(self):
+        if self.second:
+            head = self.main_list[self.first]
+            self.main_list = self.main_list[self.first + 1:]
+            self.second -= 1
+            return head
+        else:
+            return "Second Stack indefined"
+
+    def pop_three(self):
+        if self.third:
+            head = self.main_list[self.first + self.second]
+            self.main_list = self.main_list[self.first + 
+                    self.second + 1:]
+            self.third -= 1
+            return head
+        else:
+            return "Third Stack indefined"
+
+    def push_one(self, elem):
+        self.first += 1
+        self.main_list = [elem] + self.main_list
+
+    def push_two(self, elem):
+        self.second += 1
+        index = self.first
+        self.main_list = self.main_list[:index] + [elem] + self.main_list[index:]
+
+    def push_three(self, elem):
+        self.third += 1
+        index = self.first + self.second
+        self.main_list = self.main_list[:index] + [elem] + self.main_list[index:]
+
+    def __str__(self):
+        return "Triple Stack " + str(self.main_list)
+    
+    def __repr__(self):
+        return str(self)
 
 
         
@@ -641,7 +722,7 @@ class Stack():
 
 def test(call, result=True):
     if call != result:
-        print(call)
+        print("got: " + str(call))
         raise ValueError("test failed")
 
 
@@ -804,3 +885,23 @@ test(stack.pop().val, 2)
 test(stack.pop().val, 1)
 test(stack.pop(), None)
 
+
+# 3.1 triple stack
+
+ts = TripleStack()
+ts.push_one(1)
+ts.push_one(2)
+ts.push_one(3)
+test(ts.main_list, [3, 2, 1])
+test(ts.pop_one(), 3)
+test(ts.pop_one(), 2)
+ts.push_two(2)
+ts.push_three(3)
+test(ts.main_list, [1, 2, 3])
+ts.push_two(4)
+test(ts.main_list, [1, 4, 2, 3])
+test(ts.pop_one(), 1)
+test(ts.main_list, [4, 2, 3])
+ts.push_three(5)
+test(ts.main_list, [4, 2, 5, 3])
+test(type(ts.pop_one()) == str)
