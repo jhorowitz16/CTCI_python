@@ -715,8 +715,48 @@ class TripleStack():
     def __repr__(self):
         return str(self)
 
+# 3.2 Stack Min
+class MinStack():
+    """
+    regular stack, but each node has the min in its current state
+    node represented with a tuple
+    tuple = (val, min)
+    """
+    def __init__(self):
+        self.main_list = []
+        self.min = None
 
+    def push(self, val):
+        """
+        push a tuple with the val, then the min)
+        """
+        if self.min:
+            tup = (val, min(self.min, val))
+        else:
+            tup = (val, val)  # can't take the min of 'None'
+        self.min = tup[1]
+        self.main_list = [tup] + self.main_list
+
+    def pop(self):
+        """
+        pop the top element from the list
+        """
+        top_tup = self.main_list[0]
+        self.main_list = self.main_list[1:]
+        self.min = self.main_list[0][1] 
+        return top_tup[0]  # don't return min, return the element
         
+    def get_min(self):
+        return self.min
+
+
+    # alternatively - keep a second list
+    # only pop an element from the "mins here list" when equal to min
+    # can have a whole stack of say ... 5s
+    # less than or equal to the last reigning min? - push it
+    # saves space in theory - but all the same number does nothing
+        
+
 # ================== utils =================== #
 
 
@@ -887,7 +927,6 @@ test(stack.pop(), None)
 
 
 # 3.1 triple stack
-
 ts = TripleStack()
 ts.push_one(1)
 ts.push_one(2)
@@ -905,3 +944,18 @@ test(ts.main_list, [4, 2, 3])
 ts.push_three(5)
 test(ts.main_list, [4, 2, 5, 3])
 test(type(ts.pop_one()) == str)
+
+# 3.2 Stack with minValue
+ms = MinStack()
+ms.push(3)
+ms.push(1)
+test(ms.get_min(), 1)
+ms.push(2)
+test(ms.get_min(), 1)
+ms.push(1)
+test(ms.get_min(), 1)
+test([tup[0] for tup in ms.main_list], [1, 2, 1, 3])
+test(ms.pop(), 1)
+test(ms.pop(), 2)
+test(ms.pop(), 1)
+test(ms.get_min(), 3)
