@@ -259,6 +259,8 @@ class Link:
             return False
         if a.val != target.val:
             return False
+	if a.next == None and target.next == None:
+	    return True
         return Link.compare_to(a.next, target.next)
 
     def len(self):
@@ -838,6 +840,7 @@ one_one = Link(1, Link(1))
 two_one = Link(2, Link(1))
 one_one_one_one = Link(1, Link(1, one_one))
 two_two_one_one = Link(2, Link(2, one_one))
+import pdb; pdb.set_trace()
 test(Link.compare_to(one_one, Link(1, Link(1))), True)
 test(Link.compare_to(rdl(one_two), rdl(one)), False)
 test(Link.compare_to(rdl(one_two), rdl(one_two)), True)
@@ -959,3 +962,17 @@ test(ms.pop(), 1)
 test(ms.pop(), 2)
 test(ms.pop(), 1)
 test(ms.get_min(), 3)
+
+
+# 3.2 overflowing Stack checking
+# plate analogy
+stack = PlatesStack()
+test(len(stack), 0)
+stack.push(1)
+stack.push(2)
+test(len(stack), 2)
+test(stack.head.val, 2)
+
+test(stack.pop().val, 2)
+test(stack.pop().val, 1)
+test(stack.pop(), None)
