@@ -248,36 +248,36 @@ def is_string_rot(a, b):
 # ================== chapter 2 =================== #
 
 class Link:
-    def __init__(self, val=0, next=None):
-        self.val = val
-        self.next = next
+	def __init__(self, val=0, next=None):
+		self.val = val
+		self.next = next
 
-    def compare_to(a, target):
-        if not a and not target:
-            return True
-        if (a and not target) or (a and not target):
-            return False
-        if a.val != target.val:
-            return False
-	if a.next == None and target.next == None:
-	    return True
-        return Link.compare_to(a.next, target.next)
+	def compare_to(a, target):
+		if not a and not target:
+			return True
+		if (a and not target) or (a and not target):
+			return False
+		if a.val != target.val:
+			return False
+		if a.next == None and target.next == None:
+			return True
+		return Link.compare_to(a.next, target.next)
 
-    def len(self):
-        c = 0
-        while(self):
-            self = self.next
-            c += 1
-        return c
+	def len(self):
+		c = 0
+		while(self):
+			self = self.next
+			c += 1
+		return c
 
-    def append(self, target):
-        self.next = target
+	def append(self, target):
+		self.next = target
 
-    def __str__(self):
-        return '(' + str(self.val) + ', ' + str(self.next) + ')'
+	def __str__(self):
+		return '(' + str(self.val) + ', ' + str(self.next) + ')'
 
-    def __repr__(self):
-        return str(self)
+	def __repr__(self):
+		return str(self)
 
 class DLink:
     """
@@ -676,7 +676,7 @@ class TripleStack():
             self.first -= 1
             return head
         else:
-            return "First Stack indefined"
+            return "First Stack undefined"
 
     def pop_two(self):
         if self.second:
@@ -685,7 +685,7 @@ class TripleStack():
             self.second -= 1
             return head
         else:
-            return "Second Stack indefined"
+            return "Second Stack undefined"
 
     def pop_three(self):
         if self.third:
@@ -695,7 +695,7 @@ class TripleStack():
             self.third -= 1
             return head
         else:
-            return "Third Stack indefined"
+            return "Third Stack undefined"
 
     def push_one(self, elem):
         self.first += 1
@@ -758,6 +758,59 @@ class MinStack():
     # less than or equal to the last reigning min? - push it
     # saves space in theory - but all the same number does nothing
         
+
+class PlatesStack():
+	"""
+	init function with a stack cap
+	anything else goes to a second stack
+	maintain a stack of stacks
+		pop from the most recent stack lol
+	I'm assuming cap is inclusive (at capacity is ok)
+	"""
+
+	def __init__(self, cap=None):
+		"""
+		no cap means a normal stack
+		"""
+		self.stacks = Stack()
+		self.curr = Stack()
+		self.stacks.push(self.curr)
+		self.cap = cap
+	
+	def pop(self):
+		"""
+		pop from the current stack
+		if the current stack is empty pop a stack off the shelf
+		"""
+		if self.curr and len(self.curr) > 0:
+			return self.curr.pop()
+		elif self.stacks and len(self.stacks) > 1:
+			# there will always be at least one stack
+			self.curr = self.stacks.pop()
+			
+			return self.curr.pop()
+		else:
+			return "Stack undefined"
+	
+	def push(self, elem):
+		"""
+		if there's room, add it to the current stack
+		otherwise - make a new stack and add it to that one
+		"""
+		if len(self.curr) < self.cap:
+			self.curr.push(elem)
+		else:
+			self.curr = Stack()
+			self.curr.push(elem)
+	
+	def __str__(self):
+		return str(self.stacks)
+	
+	def __repr__(self):
+		return str(self)
+
+			
+		
 
 # ================== utils =================== #
 
@@ -840,7 +893,6 @@ one_one = Link(1, Link(1))
 two_one = Link(2, Link(1))
 one_one_one_one = Link(1, Link(1, one_one))
 two_two_one_one = Link(2, Link(2, one_one))
-import pdb; pdb.set_trace()
 test(Link.compare_to(one_one, Link(1, Link(1))), True)
 test(Link.compare_to(rdl(one_two), rdl(one)), False)
 test(Link.compare_to(rdl(one_two), rdl(one_two)), True)
@@ -966,13 +1018,18 @@ test(ms.get_min(), 3)
 
 # 3.2 overflowing Stack checking
 # plate analogy
-stack = PlatesStack()
-test(len(stack), 0)
+stack = PlatesStack(5)
 stack.push(1)
 stack.push(2)
-test(len(stack), 2)
-test(stack.head.val, 2)
 
 test(stack.pop().val, 2)
 test(stack.pop().val, 1)
-test(stack.pop(), None)
+import pdb; pdb.set_trace()
+test(stack.pop(), "Stack undefined")
+stack = PlatesStack(113)
+for i in range(20):
+	stack.push(i)
+for i in range(19):
+	j = 19 - i
+	test(stack.pop().val, j)
+test(stack.pop(), "Stack undefined")
