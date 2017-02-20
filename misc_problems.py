@@ -111,3 +111,158 @@ def pos_solution(A, B):
             count += 1
     return count
 
+
+# recursive tree representation of segment paths
+
+class Node:
+    """
+    represent a Node in the tree hierarchy schema
+    """
+    def __init__(self, data):
+        self.data = data
+        self.children = []
+
+    def add_child(self, child):
+        self.children.append(child)
+
+    def __repr__(self):
+        return str(self.data)
+
+    def display(self, spaces=2):
+        """
+        recursively build a string with the node's data and its children's data
+        """
+        children_str = ""
+        for child in self.children:
+            children_str += "\n" + spaces * ' ' + child.display(spaces + 2)
+        return "<" + str(self.data) + ">" + children_str 
+
+
+def generate_tree(paths):
+    """
+    Main function taking a list of path strings, and building a tree
+    Assuming all segments are identifiable by unique strings
+    Start with "segment tree" as the first root node of the full structure
+    """
+
+    seen = {}  # map name to Node
+    head = Node("Segment Tree")
+
+    for path in paths:
+        node = head
+        segs = path.split(" > ")
+        for i in range(len(segs)):
+            # if its a segment seen before, append to that one rather than a new one
+            if segs[i] in seen:
+                child = seen[segs[i]]
+            else:
+                child = Node(segs[i])
+                seen[segs[i]] = child
+                node.add_child(child)
+            node = child
+    return head
+    
+
+def tester(goal, words_set, test_str):
+    """
+    simple testing function
+    """
+    if goal == (words_set == test_str):
+        print("success")
+    else:
+        print("failure")
+
+
+def test_one():
+    """
+    ( test from interview )
+
+        FunStore
+            Clothing
+                Likes clothes so much
+                A Red Shirt
+                    N
+                    Y
+
+    """
+    segments = ["FunStore > Clothing > Likes clothes so much",
+                "FunStore > Clothing > A Red Shirt > N",
+                "FunStore > Clothing > A Red Shirt > Y"]
+    tree = generate_tree(segments)
+
+    print(tree.display(2))
+    tester(True, tree.children[0].data, "FunStore")
+    tester(True, tree.children[0].children[0].data, "Clothing")
+    tester(True, tree.children[0].children[0].children[0].data, "Likes clothes so much")
+    tester(True, tree.children[0].children[0].children[1].data, "A Red Shirt")
+    tester(True, tree.children[0].children[0].children[1].children[0].data, "N")
+    tester(True, tree.children[0].children[0].children[1].children[1].data, "Y")
+
+
+def test_two():
+    """
+    ( new test )
+    
+    A
+      B
+        C
+          D
+            E
+          F
+            G
+        H
+          I
+            J
+      L
+        M
+          N
+            O
+              P
+    Q
+      R
+    """
+    segments = ["A > B > C > D",
+                "A > B > C > D > E",
+                "A > B > C > F > G",
+                "A > B > H > I > J",
+                "A > L > M > N > O > P",
+                "Q > R"]
+    tree = generate_tree(segments)
+
+    print(tree.display(2))
+    tester(True, tree.children[0].data, "A")
+    tester(True, tree.children[0].children[0].data, "B")
+    tester(True, tree.children[0].children[0].children[0].data, "C")
+    tester(True, tree.children[0].children[0].children[0].children[0].data, "D")
+    tester(True, tree.children[0].children[0].children[0].children[0].children[0].data, "E")
+    tester(True, tree.children[0].children[0].children[0].children[1].data, "F")
+    tester(True, tree.children[0].children[0].children[0].children[1].children[0].data, "G")
+    tester(True, tree.children[0].children[0].children[1].data, "H")
+    tester(True, tree.children[0].children[0].children[1].children[0].data, "I")
+    tester(True, tree.children[0].children[0].children[1].children[0].children[0].data, "J")
+    tester(True, tree.children[0].children[1].data, "L")
+    tester(True, tree.children[0].children[1].children[0].data, "M")
+    tester(True, tree.children[0].children[1].children[0].children[0].data, "N")
+    tester(True, tree.children[0].children[1].children[0].children[0].children[0].data, "O")
+    tester(True, tree.children[0].children[1].children[0].children[0].children[0].children[0].data, "P")
+
+    tester(True, tree.children[1].data, "Q")
+    tester(True, tree.children[1].children[0].data, "R")
+
+
+def test_three():
+    """
+    misc. sanity tests
+    """
+    segments = []
+    tree = generate_tree(segments)
+    print(tree.display(2))
+    tester(True, tree, tree)
+    tester(False, tree.data, "BAD DATA")
+    tester(True, tree.children, [])
+
+
+# running tests
+test_one()
+test_two()
+test_three()
