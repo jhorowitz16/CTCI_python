@@ -266,3 +266,36 @@ def test_three():
 test_one()
 test_two()
 test_three()
+
+def build_words(d, s):
+    """
+    back to original problem - return the strings
+    """
+    
+    memo = {}  # save results
+    memo[''] = False  # can't do anything with an empty string
+
+    def helper(sub_s):
+        """
+        process this smaller "sub_string"
+        """
+        # don't recompute unless neccessary
+
+        if sub_s in d:
+            memo[sub_s] = sub_s
+            
+        if sub_s in memo:
+            return memo[sub_s]
+
+        # through every possible binary split - working with the first part, then everything else
+        for i in range(len(sub_s)):
+            first = sub_s[:i]
+            last = sub_s[i:]
+            if first in d:
+                memo[first] = first
+                processed_last = helper(last)
+                if processed_last:
+                    return first + ' ' + processed_last # *** this line changed - return before and then processed after
+        return None
+
+    return helper(s)
