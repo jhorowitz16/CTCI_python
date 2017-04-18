@@ -422,10 +422,19 @@ def test_one():
 Roads and Bridges
 """
 # variables here
+"""
 n = 3
 road_tups = [(0, 1), (0, 2), (1, 2)]
 SIZE = n + len(road_tups)
+road_cost = 2
+bridge_cost = 5
+"""
+n = 6
+library_cost = 100 
+bridge_cost = 1 
+road_tups = [ (0, 2), (2, 3), (1, 3), (0, 1), (1, 2), (4, 5) ]
 
+SIZE = n + len(road_tups)
 class City:
     def __init__(self, num, neighbors):
         self.num = num
@@ -485,11 +494,13 @@ def toggle_bridge(start, finish, val):
 
 
 def generate_setup(bitstr):
+    cost = 0
     for i in range(len(bitstr)):
         if i < len(cities):
             # set a city here
             if bitstr[i] == '1':
                 cities[i].library = True
+                cost += library_cost 
             else:
                 cities[i].library = False 
         else:
@@ -497,9 +508,11 @@ def generate_setup(bitstr):
             if bitstr[i] == '1':
                 road = road_tups[i-len(cities)]
                 toggle_bridge(road[0], road[1], True)
+                cost += bridge_cost 
             else:
                 road = road_tups[i-len(cities)]
                 toggle_bridge(road[0], road[1], False)
+    return cost
 
 
 def recap():
@@ -515,7 +528,7 @@ def has_lib_test(seed_num):
         prints the booleans
     """
     print("\nSEED " + str(seed_num) + ' // ' + str(to_bin(seed_num)))
-    generate_setup(to_bin(seed_num))
+    cost = generate_setup(to_bin(seed_num))
     results = []
     all_true = True 
     for i in range(n):
@@ -525,7 +538,7 @@ def has_lib_test(seed_num):
         results.append(res)
     recap()
     print(results)
-    return all_true
+    return (all_true, cost)
 
 
 cities = []
@@ -543,9 +556,15 @@ print(cities)
 
 solutions = []
 for i in range(2**SIZE):
-    all_true = has_lib_test(i)
+    all_true, cost = has_lib_test(i)
     if all_true:
-        solutions.append(i)
+        solutions.append((cost, i))
+solutions.sort()
+if len(solutions) > 0:
+    answer = solutions[0][0]
+else:
+    answer = None
+
 import pdb; pdb.set_trace()
 
 
