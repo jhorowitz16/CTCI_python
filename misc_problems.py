@@ -263,9 +263,9 @@ def test_three():
 
 
 # running tests
-test_one()
-test_two()
-test_three()
+# test_one()
+# test_two()
+# test_three()
 
 def build_words(d, s):
     """
@@ -299,3 +299,244 @@ def build_words(d, s):
         return None
 
     return helper(s)
+
+
+
+# LRU
+# Example is an HTTP cache that stores <URL : page content>
+#
+# 1. Please first design an API for our memory cache library
+# 2. What should the Big-O time complexity be for each of the key operations?
+# 3. What are some real world constraints our memory cache might have?
+
+
+
+"""
+
+get(key):
+    >>> the value associated with the key if its in the cache
+    or perform the actual lookup
+
+set(key, value):
+    maybe update
+    >>> the old value
+    or return None, and set that key to the new value
+
+to_string()
+
+SIZE
+"""
+
+"""
+# option 1
+        queue - eviction - doubly linked
+        []
+        
+        
+# option 2
+        dictionary - 
+        del
+"""
+
+
+class Node:
+    
+    def __init__(self, data, next_node, previous_node, key):
+        self.data = data
+        self.next_node = next_node
+        self.previous_node = previous_node
+        self.key = key
+    
+    def __repr__(self):
+        return str(self.data) + str(self.next_node)
+    
+    def __str__(self):
+        return repr(self)
+    
+
+class Cache:
+    
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.head = None
+        self.tail = None
+        self.length = 0
+        self.map = {}
+    
+    def cache_set(self, key, value):
+        # update the value
+        
+        if key in self.map:
+            
+            if self.head == self.map[key]:
+                self.head = self.map[key].next_node
+            
+            self.map[key].data = value
+            
+            # pulls the target node out of the strcture
+            
+            after_target = self.map[key].next_node
+            previous_target = self.map[key].previous_node
+            if after_target:
+                after_target.previous_node = previous_target
+            if previous_target:
+                previous_target.next_node = after_target
+            
+            old_tail = self.tail
+            self.tail = self.map[key]
+            self.map[key].previous_node = old_tail
+            self.map[key].next_node = None
+        
+        else:
+            
+            if self.length >= self.capacity:
+                # eviction
+                del self.map[self.head.key] 
+                self.head = self.head.next_node
+                self.head.next_node.previous_node = None
+                self.length -= 1
+                
+            new_node = Node(value, None, self.tail)
+            self.map[key] = new_node
+            self.tail = new_node
+            if not self.head:
+                self.head = new_node
+            self.length += 1
+            
+            
+                
+                
+        return value
+            
+    def __str__(self):
+        return str(self.map)
+    
+        
+def test_one():
+    cache = Cache(10)
+    print(cache)
+
+
+
+"""
+Roads and Bridges
+"""
+# variables here
+n = 3
+road_tups = [(1, 2), (1, 3), (2, 3)]
+
+
+class City:
+    def __init__(self, num, neighbors):
+        self.num = num
+        self.neighbors = {}
+        for neigh in neighbors:
+            self.neighbors[neigh] = False  # no bridge to them
+        self.library = False
+
+    def append_neighbor(self, neighbor):
+        if not neighbor in self.neighbors:
+            self.neighbors[neighbor] = False
+
+    def __str__(self):
+        return "City " + str(self.num)
+
+    def __repr__(self):
+        return str(self) 
+
+cities = []
+for i in range(1, n+1):
+    my_city = City(i, [])
+    cities.append(my_city)
+
+for road in road_tups:
+    start = road[0]
+    finish = road[1]
+    cities[start-1].append_neighbor( cities[finish-1] )
+    cities[finish-1].append_neighbor( cities[start-1] )
+
+print(cities)
+        
+def has_library(city, seen):
+    if city in seen:
+        return False # we already tried this
+    if city.library:
+        return True
+
+    to_search = []  # list of cities we need to check
+
+    neighs = list(city.neighbors.keys())
+    for n in neighs:
+        if city.neighbors[n]:
+            # this is a built bridge! valid!
+            to_search.append(n)
+
+    success = False
+    for poss in to_search:
+        new_seen = seen
+        new_seen[city] = True
+        success = has_library(poss, new_seen)
+        if success:
+            break
+
+    return success
+        
+
+for city in cities:
+    valid = has_library(city, {})
+    if not valid:
+        break
+
+def has_lib_test():
+    t1 = has_library(cities[0], {})
+    t2 = has_library(cities[1], {})
+    t3 = has_library(cities[2], {})
+    print(t1, t2, t3)
+
+cities[1].library = True
+has_lib_test()
+
+def to_bin(n):
+    return "{0:b}".format(n)
+
+total = len(cities) + len(road_tups)
+for i in range(2**total):
+    bitstr = to_bin(i)
+
+def generate_setup(bitstr):
+    for i in range(len(bitstr)):
+        if i < len(cities):
+            # set a city here
+            if bitstr[i] == '1':
+                cities[i].library = True
+            else:
+                cities[i].library = False 
+        else:
+            # set a road here
+            road = road_tups[i-len(cities)]
+            start = road[0]
+            finish = road[1]
+
+            # first find finish in start
+            for i in range(len(cities[start-1].neighbors)):
+                guess = cities[start-1].neighbors[i]
+                if guess.num == finish:
+                    # found it
+                    print("set " + str(guess) + " " + str(finish))
+                    guess.bridges[i] = True
+            # start in finish
+            for i in range(len(cities[finish-1].neighbors)):
+                guess = cities[finish-1].neighbors[i]
+                if guess.num == start:
+                    # found it
+                    print("set " + str(guess) + " " + str(finish))
+                    guess.bridges[i] = True
+
+import pdb; pdb.set_trace()
+
+
+
+
+
+
+
