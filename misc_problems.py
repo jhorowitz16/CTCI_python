@@ -423,8 +423,8 @@ Roads and Bridges
 """
 # variables here
 n = 3
-road_tups = [(1, 2), (1, 3), (2, 3)]
-
+road_tups = [(0, 1), (0, 2), (1, 2)]
+SIZE = n + len(road_tups)
 
 class City:
     def __init__(self, num, neighbors):
@@ -443,20 +443,8 @@ class City:
 
     def __repr__(self):
         return str(self) 
-
-cities = []
-for i in range(1, n+1):
-    my_city = City(i, [])
-    cities.append(my_city)
-
-for road in road_tups:
-    start = road[0]
-    finish = road[1]
-    cities[start-1].append_neighbor( cities[finish-1] )
-    cities[finish-1].append_neighbor( cities[start-1] )
-
-print(cities)
         
+
 def has_library(city, seen):
     if city in seen:
         return False # we already tried this
@@ -482,26 +470,19 @@ def has_library(city, seen):
     return success
         
 
-for city in cities:
-    valid = has_library(city, {})
-    if not valid:
-        break
-
-def has_lib_test():
-    t1 = has_library(cities[0], {})
-    t2 = has_library(cities[1], {})
-    t3 = has_library(cities[2], {})
-    print(t1, t2, t3)
-
-cities[1].library = True
-has_lib_test()
-
 def to_bin(n):
-    return "{0:b}".format(n)
+    base = "{0:b}".format(n)
+    while len(base) < SIZE:
+        base = '0' + base
+    return base
 
-total = len(cities) + len(road_tups)
-for i in range(2**total):
-    bitstr = to_bin(i)
+
+
+def toggle_bridge(start, finish, val):
+    # start and finish are integers - val is a bool
+    cities[start].neighbors[cities[finish]] = val 
+    cities[finish].neighbors[cities[start]] = val 
+
 
 def generate_setup(bitstr):
     for i in range(len(bitstr)):
@@ -513,30 +494,58 @@ def generate_setup(bitstr):
                 cities[i].library = False 
         else:
             # set a road here
-            road = road_tups[i-len(cities)]
-            start = road[0]
-            finish = road[1]
+            if bitstr[i] == '1':
+                road = road_tups[i-len(cities)]
+                toggle_bridge(road[0], road[1], True)
+            else:
+                road = road_tups[i-len(cities)]
+                toggle_bridge(road[0], road[1], False)
 
-            # first find finish in start
-            for i in range(len(cities[start-1].neighbors)):
-                guess = cities[start-1].neighbors[i]
-                if guess.num == finish:
-                    # found it
-                    print("set " + str(guess) + " " + str(finish))
-                    guess.bridges[i] = True
-            # start in finish
-            for i in range(len(cities[finish-1].neighbors)):
-                guess = cities[finish-1].neighbors[i]
-                if guess.num == start:
-                    # found it
-                    print("set " + str(guess) + " " + str(finish))
-                    guess.bridges[i] = True
 
+def recap():
+    print("---")
+    for city in cities:
+        print(str(city) + " | " + str(city.library) + " | " + str(city.neighbors))
+
+
+def has_lib_test(seed_num):
+    """
+        seed_num is the number from 0 to 2^n 
+        where n is the number of cities + number of roads
+        prints the booleans
+    """
+    print("\nSEED " + str(seed_num) + ' // ' + str(to_bin(seed_num)))
+    generate_setup(to_bin(seed_num))
+    results = []
+    all_true = True 
+    for i in range(n):
+        res = has_library(cities[i], {})
+        if not res:
+            all_true = False
+        results.append(res)
+    recap()
+    print(results)
+    return all_true
+
+
+cities = []
+for i in range(n):
+    my_city = City(i, [])
+    cities.append(my_city)
+
+for road in road_tups:
+    start = road[0]
+    finish = road[1]
+    cities[start].append_neighbor( cities[finish] )
+    cities[finish].append_neighbor( cities[start] )
+
+print(cities)
+
+solutions = []
+for i in range(2**SIZE):
+    all_true = has_lib_test(i)
+    if all_true:
+        solutions.append(i)
 import pdb; pdb.set_trace()
-
-
-
-
-
 
 
