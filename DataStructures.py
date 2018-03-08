@@ -20,7 +20,7 @@ def is_all_unique_no_space(s):
     returns if a string has all unique characters without data structs
     """
     for i in range(len(s)):
-        for j in range(i+1, len(s)):
+        for j in range(i + 1, len(s)):
             if s[i] == s[j]:
                 return False
     return True
@@ -30,7 +30,7 @@ def is_permutation(a, b):
     """
     returns whether string a is a permutation of string b
     """
-    
+
     # strategy 1: sort both strings then compare them traditionally
     a_list, b_list = [c for c in a], [c for c in b]
     a_list.sort()
@@ -62,23 +62,23 @@ def percent_20_in_place(s, n):
     # then make a second pass to fill out the array
     # tbh excuse to work with arrays
 
-    spaces = 0 
+    spaces = 0
     for c in s:
         if c == ' ':
             spaces += 1
 
     # for each space - we gain 2 characters
 
-    new_len = n + 2 * spaces 
+    new_len = n + 2 * spaces
     new_str = [' ' for _ in range(new_len)]
 
     j = 0  # counter for new_str
     for i in range(len(s)):
         if s[i] == ' ':
             new_str[j] = '%'
-            new_str[j+1] = '2'
-            new_str[j+2] = '0'
-            j += 3 
+            new_str[j + 1] = '2'
+            new_str[j + 2] = '0'
+            j += 3
         else:
             new_str[j] = s[i]
             j += 1
@@ -87,7 +87,7 @@ def percent_20_in_place(s, n):
         ret_str += c
     return ret_str
 
-        
+
 def palindrome_perm(s):
     """
     for all permutations of a string s, determine if any are a palindrome
@@ -124,7 +124,6 @@ def one_away(a, b):
                 found_diff = True
         return True
 
-    
     def insert_check(s1, s2):
         """
         inserting a char into s1 becomes s2
@@ -169,7 +168,7 @@ def str_compress(s):
                 ret_str += last + str(count)
             last = s[i]
             count = 1
-    ret_str += last + str(count) 
+    ret_str += last + str(count)
     return ret_str
 
 
@@ -193,15 +192,16 @@ def rotate_matrix(M):
             offset = i - first
             temp_top = M[first][i]
             # left to top
-            M[first][i] = M[last-offset][first] 
+            M[first][i] = M[last - offset][first]
             # bottom to left
-            M[last-offset][first] = M[last][last-offset] 
+            M[last - offset][first] = M[last][last - offset]
             # right to bottom
-            M[last][last-offset] = M[i][last]
+            M[last][last - offset] = M[i][last]
             # top to right
             M[i][last] = temp_top
     return M
-    
+
+
 def zero_matrix(M):
     """
     M is a (m by n) matrix with m rows and n columns
@@ -222,7 +222,7 @@ def zero_matrix(M):
         for j in range(n):
             if i in rows or j in cols:
                 M[i][j] = 0
-                
+
     return M
 
 
@@ -235,49 +235,52 @@ def is_string_rot(a, b):
        erbottlewat
     think reductions 
     """
+
     def is_substring(a, b):
         """
         return true if a is a substring of b
         a in b works in python
         """
         return a in b
-    aa = a + a 
+
+    aa = a + a
     return is_substring(b, aa)
 
 
 # ================== chapter 2 =================== #
 
 class Link:
-	def __init__(self, val=0, next=None):
-		self.val = val
-		self.next = next
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
 
-	def compare_to(a, target):
-		if not a and not target:
-			return True
-		if (a and not target) or (a and not target):
-			return False
-		if a.val != target.val:
-			return False
-		if a.next == None and target.next == None:
-			return True
-		return Link.compare_to(a.next, target.next)
+    def compare_to(a, target):
+        if not a and not target:
+            return True
+        if (a and not target) or (a and not target):
+            return False
+        if a.val != target.val:
+            return False
+        if a.next == None and target.next == None:
+            return True
+        return Link.compare_to(a.next, target.next)
 
-	def len(self):
-		c = 0
-		while(self):
-			self = self.next
-			c += 1
-		return c
+    def len(self):
+        c = 0
+        while (self):
+            self = self.next
+            c += 1
+        return c
 
-	def append(self, target):
-		self.next = target
+    def append(self, target):
+        self.next = target
 
-	def __str__(self):
-		return '(' + str(self.val) + ', ' + str(self.next) + ')'
+    def __str__(self):
+        return '(' + str(self.val) + ', ' + str(self.next) + ')'
 
-	def __repr__(self):
-		return str(self)
+    def __repr__(self):
+        return str(self)
+
 
 class DLink:
     """
@@ -288,7 +291,6 @@ class DLink:
         self.val = val
         self.next = next
         self.prev = prev
-
 
     def compare_to(a, target):
         if not a and not target:
@@ -301,7 +303,7 @@ class DLink:
 
     def len(self):
         c = 0
-        while(self):
+        while (self):
             self = self.next
             c += 1
         return c
@@ -316,6 +318,7 @@ class DLink:
     def __repr__(self):
         return str(self)
 
+
 def rdl(head):
     """
     remove duplicate link - solved recursively
@@ -323,7 +326,7 @@ def rdl(head):
     if current in seen? skip it by changing prev's next
         shift over
     """
-    
+
     seen = {}
     prev = None
     curr = head
@@ -335,7 +338,8 @@ def rdl(head):
             prev = curr
         curr = curr.next
     return head
-         
+
+
 def kth_to_first(head, k):
     """
     alt helper...
@@ -344,6 +348,7 @@ def kth_to_first(head, k):
         return head
     else:
         return kth_to_first(head.next, k - 1)
+
 
 def kth_to_last(head, k):
     """
@@ -356,6 +361,7 @@ def kth_to_last(head, k):
         head = head.next
         k += 1
     return head
+
 
 # make a ruler of length k (gap between two nodes)
 # then slide both down till the end lol
@@ -371,6 +377,7 @@ def remove_mid_link(target):
     next = target.next
     target.val = next.val
     target.next = next.next
+
 
 def partition_ll(head, target):
     """
@@ -389,13 +396,14 @@ def partition_ll(head, target):
     for v in all_vals[1:]:
         new_tail.next = Link(v)
         new_tail = new_tail.next
-    return new_head 
+    return new_head
 
-    
+
 def sum_ll(a, b):
     """
     turn a linked list into a number, then conventionally add them
     """
+
     def link_to_num(link):
         """
         Link(7, Link(1, Link(6))) becomes 617
@@ -406,24 +414,24 @@ def sum_ll(a, b):
             val += (link.val * place)
             place *= 10
             link = link.next
-        return val 
+        return val
 
     def num_to_link(num):
         """
         617 becomes Link(7, Link(1, Link(6))) 
         gets the ones, then get the tens etc...
         """
-        
+
         link = Link(num % 10)
         head = link
         while num >= 10:
             num = num // 10
             link.next = Link(num % 10)
             link = link.next
-        return head 
+        return head
 
-    return num_to_link(link_to_num(a) + link_to_num(b)) 
-        
+    return num_to_link(link_to_num(a) + link_to_num(b))
+
 
 def is_link_palindrome(link):
     """
@@ -431,7 +439,7 @@ def is_link_palindrome(link):
     maintain a head and tail, then wait till next is tail
     """
     if not Link:
-        return 
+        return
     tail = None
     head = link
 
@@ -460,6 +468,7 @@ def link_intersection(a, b):
         ...
      ..
     """
+
     # obs 1 - if they're intersecting, then they have the same ending
     def find_last(node):
         """
@@ -476,9 +485,9 @@ def link_intersection(a, b):
 
     if last_a != last_b:
         # no intersection
-        return None 
+        return None
 
-    # where to find? cut off extra stuff on the longer one
+        # where to find? cut off extra stuff on the longer one
     # advace one at a time till looking at the same node
 
     a_len = a.len()
@@ -518,9 +527,9 @@ def loop_detect(node):
             fast = fast.next.next
         else:
             # got to the end
-            return False 
+            return False
         if slow == fast:
-            return True 
+            return True
         count += 1
     return False
 
@@ -539,11 +548,11 @@ def find_loop_point(node):
 
     """
     if not loop_detect(node):
-        return False 
+        return False
 
     slow = node
     fast = node
-    
+
     done = False
     while slow and fast and not done:
         slow = slow.next
@@ -552,7 +561,7 @@ def find_loop_point(node):
             if slow == fast:
                 done = True
                 break
-                
+
         else:
             # the fast runner hit the end - can't be a loop
             return False
@@ -566,13 +575,14 @@ def find_loop_point(node):
 
     return fast  # or return slow
 
-            
+
 # ================== chapter 3 =================== #
 
 class Stack():
     """ 
     representing the stack as as linked list
     """
+
     def __init__(self, init_list=[]):
         """
         can initialize the stack with a python list of values
@@ -587,8 +597,8 @@ class Stack():
             self.tail = current
             self.length = len(init_list)
         else:
-            self.head = None 
-            self.tail = None 
+            self.head = None
+            self.tail = None
             self.length = 0
 
     def peek(self):
@@ -605,7 +615,7 @@ class Stack():
             temp = self.head
             self.head = self.head.next
             self.length -= 1
-            return temp 
+            return temp
         return None
 
     def push(self, new_elem):
@@ -616,7 +626,7 @@ class Stack():
         new_node.next = self.head
         self.head = new_node
         self.length += 1
-        return bool(new_elem) 
+        return bool(new_elem)
 
     def __len__(self):
         return self.length
@@ -636,18 +646,19 @@ class TripleStack():
     """
     single array - 3 stacks inside
     """
+
     def __init__(self):
         """
         counts - use this to find where in the array to go
 
         """
         self.main_list = []
-        self.first = 0 
-        self.second = 0 
-        self.third = 0 
+        self.first = 0
+        self.second = 0
+        self.third = 0
 
 
-    # PEEK COMMANDS 
+        # PEEK COMMANDS
 
     def peek_one(self):
         if self.first:
@@ -660,7 +671,7 @@ class TripleStack():
             return self.main_list[self.first]
         else:
             return "Second Stack indefined"
-        
+
     def peek_three(self):
         if self.third:
             return self.main_list[self.first + self.second]
@@ -690,8 +701,8 @@ class TripleStack():
     def pop_three(self):
         if self.third:
             head = self.main_list[self.first + self.second]
-            self.main_list = self.main_list[self.first + 
-                    self.second + 1:]
+            self.main_list = self.main_list[self.first +
+                                            self.second + 1:]
             self.third -= 1
             return head
         else:
@@ -713,9 +724,10 @@ class TripleStack():
 
     def __str__(self):
         return "Triple Stack " + str(self.main_list)
-    
+
     def __repr__(self):
         return str(self)
+
 
 # 3.2 Stack Min
 class MinStack():
@@ -724,6 +736,7 @@ class MinStack():
     node represented with a tuple
     tuple = (val, min)
     """
+
     def __init__(self):
         self.main_list = []
         self.min = None
@@ -745,72 +758,109 @@ class MinStack():
         """
         top_tup = self.main_list[0]
         self.main_list = self.main_list[1:]
-        self.min = self.main_list[0][1] 
+        self.min = self.main_list[0][1]
         return top_tup[0]  # don't return min, return the element
-        
+
     def get_min(self):
         return self.min
 
 
-    # alternatively - keep a second list
-    # only pop an element from the "mins here list" when equal to min
-    # can have a whole stack of say ... 5s
-    # less than or equal to the last reigning min? - push it
-    # saves space in theory - but all the same number does nothing
-        
+        # alternatively - keep a second list
+        # only pop an element from the "mins here list" when equal to min
+        # can have a whole stack of say ... 5s
+        # less than or equal to the last reigning min? - push it
+        # saves space in theory - but all the same number does nothing
 
+
+# 3.3 Plates Stack
 class PlatesStack():
-	"""
-	init function with a stack cap
-	anything else goes to a second stack
-	maintain a stack of stacks
-		pop from the most recent stack lol
-	I'm assuming cap is inclusive (at capacity is ok)
-	"""
+    """
+    init function with a stack cap
+    anything else goes to a second stack
+    maintain a stack of stacks
+        pop from the most recent stack lol
+    I'm assuming cap is inclusive (at capacity is ok)
+    """
 
-	def __init__(self, cap=None):
-		"""
-		no cap means a normal stack
-		"""
-		self.stacks = Stack()
-		self.curr = Stack()
-		self.stacks.push(self.curr)
-		self.cap = cap
-	
-	def pop(self):
-		"""
-		pop from the current stack
-		if the current stack is empty pop a stack off the shelf
-		"""
-		if self.curr and len(self.curr) > 0:
-			return self.curr.pop()
-		elif self.stacks and len(self.stacks) > 1:
-			# there will always be at least one stack
-			self.curr = self.stacks.pop()
-			
-			return self.curr.pop()
-		else:
-			return "Stack undefined"
-	
-	def push(self, elem):
-		"""
-		if there's room, add it to the current stack
-		otherwise - make a new stack and add it to that one
-		"""
-		if len(self.curr) < self.cap:
-			self.curr.push(elem)
-		else:
-			self.curr = Stack()
-			self.curr.push(elem)
-	
-	def __str__(self):
-		return str(self.stacks)
-	
-	def __repr__(self):
-		return str(self)
+    def __init__(self, cap=None):
+        """
+        no cap means a normal stack
+        """
+        self.stacks = Stack()
+        self.curr = Stack()
+        self.stacks.push(self.curr)
+        self.cap = cap
 
-			
-		
+    def pop(self):
+        """
+        pop from the current stack
+        if the current stack is empty pop a stack off the shelf
+        """
+        if self.curr and len(self.curr) > 0:
+            return self.curr.pop()
+        elif self.stacks and len(self.stacks) > 1:
+            # there will always be at least one stack
+            self.curr = self.stacks.pop()
+
+            return self.curr.pop()
+        else:
+            return "Stack undefined"
+
+    def push(self, elem):
+        """
+        if there's room, add it to the current stack
+        otherwise - make a new stack and add it to that one
+        """
+        if len(self.curr) < self.cap:
+            self.curr.push(elem)
+        else:
+            self.curr = Stack()
+            self.curr.push(elem)
+
+    def __str__(self):
+        return str(self.stacks)
+
+    def __repr__(self):
+        return str(self)
+
+
+# 3.4 Towers of Hanoi
+def solve_hanoi(height):
+    """
+    represent the towers with 3 stacks
+    there are a set of legal moves - hard code each of those strings
+
+    """
+
+    towers = {
+        'a': [x for x in range(height)],
+        'b': [],
+        'c': []
+    }
+
+    import pdb; pdb.set_trace()
+    moves = []
+
+    def hanoi(n, start, helper, end):
+
+        # base this on n rather than the towers
+        if n <= 0:
+            return
+
+        # n-1 disks to helper
+        hanoi(n-1, start, end, helper)
+
+        # last disk to end
+        disk = towers[start].pop()
+        towers[end].append(disk)
+        move = start + ' to ' + end
+        moves.append(move)
+
+        # n-1 disks from helper to end
+        hanoi(n-1, helper, start, end)
+
+    hanoi(3, 'a', 'b', 'c')
+    return moves
 
 # ================== utils =================== #
 
@@ -840,10 +890,10 @@ test(is_permutation("lol", "lolz"), False)
 test(is_permutation("123456asdfasdf", "12313asdfasdf"), False)
 
 # 1.3 - %20 replacements
-test(percent_20_replacements("hello world test"), 
-        "hello%20world%20test")
-test(percent_20_in_place("hello world test", 16), 
-        "hello%20world%20test")
+test(percent_20_replacements("hello world test"),
+     "hello%20world%20test")
+test(percent_20_in_place("hello world test", 16),
+     "hello%20world%20test")
 
 # 1.4 - palindrome perm
 test(palindrome_perm("tactcoa"), True)
@@ -858,7 +908,7 @@ oa = one_away
 test(oa("pale", "ple"))
 test(oa("pales", "pale"))
 test(oa("pale", "bale"))
-test(oa("pale","bake"), False)
+test(oa("pale", "bake"), False)
 
 # 1.6 - string compression
 test(str_compress("aabcccccaaa"), "a2b1c5a3")
@@ -903,7 +953,7 @@ test(Link.compare_to(rdl(two_two_one_one), two_one), True)
 # 2.2 - return kth to last element from a linked list
 one_one = Link(1, Link(1))
 two_two_one_one = Link(2, Link(2, one_one))
-ktl = kth_to_last 
+ktl = kth_to_last
 test(Link.compare_to(ktl(two_two_one_one, 1), Link(1)), True)
 test(Link.compare_to(ktl(two_two_one_one, 1), Link(2)), False)
 test(Link.compare_to(ktl(two_two_one_one, 2), one_one), True)
@@ -924,9 +974,9 @@ rml(second_mid)
 test(Link.compare_to(second_list, rest))
 
 # 2.4 partition a linked list around x
-in_l =  Link(3, Link(5, Link(8, Link(5, Link(10, Link(2, Link(1)))))))
+in_l = Link(3, Link(5, Link(8, Link(5, Link(10, Link(2, Link(1)))))))
 out_l = Link(1, Link(2, Link(3, Link(5, Link(5, Link(8, Link(10)))))))
-test(Link.compare_to(partition_ll(in_l, in_l.next), out_l)) 
+test(Link.compare_to(partition_ll(in_l, in_l.next), out_l))
 
 # 2.5 sum linked list representations of numbers
 six_one_seven = Link(7, Link(1, Link(6)))
@@ -955,7 +1005,7 @@ loop = Link(1, Link(2))
 loop.next = loop
 loop_two = Link(1)
 loop_two.next = loop_two
-test(loop_detect(loop)) 
+test(loop_detect(loop))
 test(loop_detect(one_six), False)
 test(loop_detect(loop_two))
 
@@ -979,7 +1029,6 @@ test(stack.head.val, 2)
 test(stack.pop().val, 2)
 test(stack.pop().val, 1)
 test(stack.pop(), None)
-
 
 # 3.1 triple stack
 ts = TripleStack()
@@ -1015,8 +1064,7 @@ test(ms.pop(), 2)
 test(ms.pop(), 1)
 test(ms.get_min(), 3)
 
-
-# 3.2 overflowing Stack checking
+# 3.3 overflowing Stack checking
 # plate analogy
 stack = PlatesStack(5)
 stack.push(1)
@@ -1024,12 +1072,28 @@ stack.push(2)
 
 test(stack.pop().val, 2)
 test(stack.pop().val, 1)
-import pdb; pdb.set_trace()
 test(stack.pop(), "Stack undefined")
 stack = PlatesStack(113)
 for i in range(20):
-	stack.push(i)
-for i in range(19):
-	j = 19 - i
-	test(stack.pop().val, j)
+    stack.push(i)
+for i in range(20):
+    j = 19 - i
+    test(stack.pop().val, j)
 test(stack.pop(), "Stack undefined")
+
+# 3.4 Towers of Hanoi
+# one = solve_hanoi(1)
+# test(one, ['a to c'])
+# two = solve_hanoi(2)
+# test(two, ['a to b', 'a to c', 'b to c'])
+three = solve_hanoi(4)
+sol = [
+    'a to c',
+    'a to b',
+    'c to b',
+    'a to c',  # big
+    'b to a',
+    'b to c',
+    'a to c'
+]
+test(three, sol)
