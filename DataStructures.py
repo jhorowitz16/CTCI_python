@@ -838,7 +838,6 @@ def solve_hanoi(height):
         'c': []
     }
 
-    import pdb; pdb.set_trace()
     moves = []
 
     def hanoi(n, start, helper, end):
@@ -861,6 +860,55 @@ def solve_hanoi(height):
 
     hanoi(3, 'a', 'b', 'c')
     return moves
+
+# 3.5 MyQueue with 2 stacks
+class MyQueue():
+    """
+    maintain 2 stacks, one is a loading dock and the other one is inverted lazily
+    """
+
+    def __init__(self):
+        self.to_pop_stack = []
+        self.unprocessed_stack = []
+        self.length = 0
+
+    def peek(self):
+        if self.length:
+            if not len(self.to_pop_stack):
+                while len(self.unprocessed_stack):
+                    self.to_pop_stack.append(self.unprocessed_stack.pop())
+            return self.to_pop_stack[-1]
+
+
+    def pop(self):
+        if self.length:
+            if not len(self.to_pop_stack):
+                while len(self.unprocessed_stack):
+                    self.to_pop_stack.append(self.unprocessed_stack.pop())
+            return self.to_pop_stack.pop()
+
+
+    def push(self, data):
+        self.length += 1
+        self.unprocessed_stack.append(data)
+
+    def __str__(self):
+        return "unprocessed: " + str(self.unprocessed_stack) + "\nprocessed: " + str(self.to_pop_stack)
+
+
+# 3.6 Sort Stack in Ascending Order
+def sort_stack(s):
+
+    """
+    sort the stack with a helper stack, s.t the helper stack is always sorted
+    push onto the helper stack when the target item is greater than the peeked top
+    until then keep a counter of how many things you move to the main stack
+    place the element
+    put ctr moves back
+    """
+
+
+
 
 # ================== utils =================== #
 
@@ -1082,11 +1130,7 @@ for i in range(20):
 test(stack.pop(), "Stack undefined")
 
 # 3.4 Towers of Hanoi
-# one = solve_hanoi(1)
-# test(one, ['a to c'])
-# two = solve_hanoi(2)
-# test(two, ['a to b', 'a to c', 'b to c'])
-three = solve_hanoi(4)
+three = solve_hanoi(3)
 sol = [
     'a to c',
     'a to b',
@@ -1097,3 +1141,36 @@ sol = [
     'a to c'
 ]
 test(three, sol)
+
+#3.5 MyQueue with 2 stacks
+queue = MyQueue()
+queue.push(1)
+queue.push(2)
+test(queue.pop(), 1)
+test(queue.pop(), 2)
+queue.push(1)
+queue.push(2)
+queue.push(3)
+queue.push(3)
+test(queue.pop(), 1)
+test(queue.pop(), 2)
+queue.push(4)
+test(queue.pop(), 3)
+test(queue.pop(), 3)
+test(queue.pop(), 4)
+queue.push(4)
+test(queue.peek(), 4)
+test(queue.peek(), 4)
+
+#3.6 Sort Stack in Ascending Order
+
+stack = Stack([1, 5, 2, 3, 4, 9, 8])
+sorted = sort_stack(stack)
+test(sorted.pop(), 9)
+test(sorted.pop(), 8)
+test(sorted.pop(), 5)
+test(sorted.pop(), 4)
+test(sorted.pop(), 3)
+test(sorted.pop(), 2)
+test(sorted.pop(), 1)
+
