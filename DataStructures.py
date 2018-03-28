@@ -907,6 +907,45 @@ def sort_stack(s):
     put ctr moves back
     """
 
+    helper = []
+    while len(s):
+        target = s.pop()
+
+        while len(helper) and target < helper[-1]:
+            # move the top of helper to the main one
+            s.append(helper.pop())
+
+        # push it now
+        helper.append(target)
+
+    return helper
+
+
+# 3.7 Dog and Cat Queue
+class DogCatQueue():
+
+    def __init__(self):
+        self.dogs = []
+        self.cats = []
+
+    def push(self, isDog, data):
+        if isDog:
+            # dog
+            self.dogs.append(data)
+        else:
+            self.cats.append(data)
+
+    def dequeueDog(self):
+        if self.dogs:
+            dog = self.dogs[0]
+            self.dogs = self.dogs[1:]
+            return dog
+
+    def dequeueCat(self):
+        if self.cats:
+            cat = self.cats[0]
+            self.cats = self.cats[1:]
+            return cat
 
 
 
@@ -1142,7 +1181,7 @@ sol = [
 ]
 test(three, sol)
 
-#3.5 MyQueue with 2 stacks
+# 3.5 MyQueue with 2 stacks
 queue = MyQueue()
 queue.push(1)
 queue.push(2)
@@ -1162,9 +1201,9 @@ queue.push(4)
 test(queue.peek(), 4)
 test(queue.peek(), 4)
 
-#3.6 Sort Stack in Ascending Order
+# 3.6 Sort Stack in Ascending Order
 
-stack = Stack([1, 5, 2, 3, 4, 9, 8])
+stack = [1, 5, 2, 3, 4, 9, 8]
 sorted = sort_stack(stack)
 test(sorted.pop(), 9)
 test(sorted.pop(), 8)
@@ -1174,3 +1213,13 @@ test(sorted.pop(), 3)
 test(sorted.pop(), 2)
 test(sorted.pop(), 1)
 
+# 3.7 Dog and Cat Queue
+shelter = DogCatQueue()
+shelter.push(True, "dog1")
+shelter.push(True, "dog2")
+shelter.push(False, "cat1")
+shelter.push(True, "dog3")
+test(shelter.dequeueDog(), "dog1");
+test(shelter.dequeueDog(), "dog2");
+test(shelter.dequeueDog(), "dog3");
+test(shelter.dequeueCat(), "cat1");
