@@ -84,12 +84,25 @@ def existsGraphPath(start, finish):
     return False
 
 
+# 4.3 Build BST from array
+def create_minimal_BST(nums):
+    """
+    :param nums:
+    :return Tree:
 
+    the middle element becomes the root
+    recursively add small stuff to the leftsubtree, and big to the right
+    """
+    if not nums:
+        return None
+    m = len(nums) // 2
+    middle = nums[m]
+    root = BinaryTree(middle)
+    root.leftChild = create_minimal_BST(nums[:m])
+    root.rightChild = create_minimal_BST(nums[m+1:])
+    return root
 
-
-    return True
-
-
+# 4.4
 
 # ================== utils =================== #
 
@@ -138,5 +151,34 @@ test(existsGraphPath(g, a), False)
 test(existsGraphPath(g, e), True)
 test(existsGraphPath(d, e), True)
 test(existsGraphPath(d, g), False)
+
+# 4.3 - build a Binary Search Tree of minimum height from a sorted list
+nums = [1, 2 ,3]
+small_tree = create_minimal_BST(nums)
+test(small_tree.val, 2)
+test(small_tree.leftChild.val, 1)
+test(small_tree.rightChild.val, 3)
+nums = [1, 2 ,3, 4]
+small_tree = create_minimal_BST(nums)
+test(small_tree.val, 3)
+test(small_tree.leftChild.val, 2)
+test(small_tree.leftChild.leftChild.val, 1)
+test(small_tree.rightChild.val, 4)
+nums = [n+1 for n in range(7)]
+small_tree = create_minimal_BST(nums)
+test(small_tree.val, 4)
+test(small_tree.leftChild.val, 2)
+test(small_tree.leftChild.leftChild.val, 1)
+test(small_tree.leftChild.rightChild.val, 3)
+test(small_tree.rightChild.val, 6)
+test(small_tree.rightChild.leftChild.val, 5)
+test(small_tree.rightChild.rightChild.val, 7)
+nums = [n+1 for n in range(64)]
+large_tree = create_minimal_BST(nums)
+test(large_tree.val, 33)
+test(large_tree.rightChild.val, 49)
+test(large_tree.leftChild.val, 17)
+
+
 
 
