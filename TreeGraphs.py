@@ -10,7 +10,7 @@ class Tree():
     def __str__(self):
         return str(self.val) + '{ ' + str(self.children) + '} '
 
-class UndirectedGraph():
+class DirectedGraph():
     def __init__(self, val=None, neighbors=[]):
         self.val = val
         self.neighbors = neighbors
@@ -66,10 +66,24 @@ def getSubtreeHeight(t):
 
 def existsGraphPath(start, finish):
     """
-    :param start:
-    :param finish:
-    :return boolean
+    maintain a queue for BFS
     """
+    fringe = [start]
+    visited = set([start])
+    while fringe:
+        target = fringe[0]
+        fringe = fringe[1:]
+
+        if target == finish:
+            return True
+
+        visited.add(target)
+
+        [fringe.append(c) for c in target.neighbors if c not in visited]
+
+    return False
+
+
 
 
 
@@ -102,23 +116,25 @@ test(isBalanced(t4), False)
 test(isBalanced(t5), False)
 
 # 4.2 - isGraphRoute (T/F)
-Graph = UndirectedGraph
+Graph = DirectedGraph
 g = Graph(1)
 a = Graph(2)
 b = Graph(3)
 c = Graph(4)
 g.addNeighbor(b)
 g.addNeighbor(c)
+b.addNeighbor(c)
 a.addNeighbor(b)
-test(existsGraphPath(g, b), False)
-test(existsGraphPath(b, g), True)
-test(existsGraphPath(g, a), True)
+test(existsGraphPath(g, b), True)
+test(existsGraphPath(b, g), False)
+test(existsGraphPath(g, a), False)
 test(existsGraphPath(a, g), False)
+test(existsGraphPath(g, c), True)
 d = Graph(5)
 e = Graph(6)
 c.addNeighbor(d)
 d.addNeighbor(e)
-test(existsGraphPath(g, a), True)
+test(existsGraphPath(g, a), False)
 test(existsGraphPath(g, e), True)
 test(existsGraphPath(d, e), True)
 test(existsGraphPath(d, g), False)
