@@ -273,7 +273,11 @@ class Link:
         return c
 
     def append(self, target):
-        self.next = target
+        if not self.next:
+            self.next = target
+        else:
+            self.next.append(target)
+
 
     def __str__(self):
         return '(' + str(self.val) + ', ' + str(self.next) + ')'

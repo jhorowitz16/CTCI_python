@@ -1,3 +1,5 @@
+from DataStructures import Link
+
 # Chapter 4 - Trees and Graphs
 
 # ================== classes =================== #
@@ -102,7 +104,42 @@ def create_minimal_BST(nums):
     root.rightChild = create_minimal_BST(nums[m+1:])
     return root
 
-# 4.4
+# 4.4 tree to D Linked Lists at height D
+def create_linked_lists(t):
+    """
+
+    :param t:
+    :return Linked List of Linked Lists:
+    pass the level
+    """
+
+    def helper(tree_root, list_of_lists, level):
+
+        if not tree_root:
+            return
+
+        level_list = Link(None)
+
+        if len(list_of_lists) >= level:
+            # too big! level is not in list
+            level_list = Link(None)
+
+            # we can sign off on the previous level
+            list_of_lists.append(level_list)
+        else:
+            level_list = list_of_lists[level]
+
+        level_list.append(tree_root)
+        helper(tree_root.leftChild, list_of_lists, level + 1)
+        helper(tree_root.rightChild, list_of_lists, level + 1)
+
+    sol = []
+    helper(t, sol, 0)
+    return sol
+
+# 5.1
+
+
 
 # ================== utils =================== #
 
@@ -179,6 +216,33 @@ test(large_tree.val, 33)
 test(large_tree.rightChild.val, 49)
 test(large_tree.leftChild.val, 17)
 
+# 4.4 - convert a binary tree to a set of D Linked Lists with all the elements at that height
+# nums = [1]
+# small_tree = create_minimal_BST(nums)
+# linked_lists = create_linked_lists(small_tree)
+# one = Link(1)
+# test(Link.compare_to(linked_lists.val, one))
+# nums = [1, 2 ,3]
+# small_tree = create_minimal_BST(nums)
+# linked_lists = create_linked_lists(small_tree)
+# one = Link(1)
+# children = Link(2, Link(3))
+# test(Link.compare_to(linked_lists.val, one))
+# test(linked_lists.next.val, children)
+# nums = [n+1 for n in range(64)]
+# large_tree = create_minimal_BST(nums)
+# linked_lists = create_linked_lists(large_tree)
+# test(linked_lists.val.len(), 1)
+# test(linked_lists.next.val.len(), 2)
+# test(linked_lists.next.next.val.len(), 4)
+# test(linked_lists.next.next.next.val.len(), 8)
 
 
+# 5.1 - bit insertion
+N = int('10000000000', 2)
+M = int('10011')
+i = 2
+j = 6
+output = int('10001001100', 2)
+test(bit_insertion(N, M, i, j), output)
 
