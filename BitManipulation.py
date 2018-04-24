@@ -105,6 +105,44 @@ def next_smallest(n):
             break
     return int(bin_form, 2)
 
+# 5.4 explain this number
+# n & (n - 1) == 0 - power of 2
+
+# 5.5 number of bis to convert a number into another
+def num_bits_to_convert(x, y):
+    count = 0
+    while x > 0 or y > 0:
+        x_one = x % 2
+        y_one = y % 2
+        if x_one != y_one:
+            count += 1
+        x = x // 2
+        y = y // 2
+    return count
+
+# 5.6 - swap even and odd bits
+def swap_even_odd(x):
+    """
+
+    all  = XXXXXXXX
+    odd  = X.X.X.X.
+    even = .X.X.X.X
+
+    shift odd to the right
+    shift even to the left
+
+
+
+
+    :param x:
+    :return:
+    """
+
+    odd = 0xAAAA & x
+    even = 0x5555 & x
+    return (odd >> 1) | (even << 1)
+
+
 
 # ================== utils =================== #
 
@@ -147,3 +185,26 @@ test(next_smallest(8), 4)
 test(next_smallest(6), 5)
 test(next_smallest(11), 7)
 test(next_smallest(18), 17)
+
+# 5.5
+test(num_bits_to_convert(1, 0), 1)
+test(num_bits_to_convert(5, 0), 2)
+test(num_bits_to_convert(4, 0), 1)
+test(num_bits_to_convert(7, 0), 3)
+test(num_bits_to_convert(7, 4), 2)
+test(num_bits_to_convert(7, 1), 2)
+test(num_bits_to_convert(16, 1), 2)
+test(num_bits_to_convert(274, 274), 0)
+test(num_bits_to_convert(0, 0), 0)
+
+# 5.6
+test(swap_even_odd(3), 3)
+test(swap_even_odd(1), 2)
+test(swap_even_odd(2), 1)
+test(swap_even_odd(8), 4)
+test(swap_even_odd(4), 8)
+test(swap_even_odd(7), 11)
+test(swap_even_odd(9), 6)
+test(swap_even_odd(6), 9)
+
+# 5.7
