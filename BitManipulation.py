@@ -142,6 +142,116 @@ def swap_even_odd(x):
     even = 0x5555 & x
     return (odd >> 1) | (even << 1)
 
+# 5.7 - find missing number
+"""
+even odd cases
+0000
+0001
+0010
+----
+0100
+0101
+0110
+0111
+====
+0433
+last bit - more zeros than ones and should be balanced ... 1
+remove bits that aren't relevant
+    
+next bit - more zeros than ones and should be balanced
+Observation
+equal or less 0s? add a 0
+only add a 1 when more 0s than ones
+"""
+def find_missing(bin_nums):
+
+    n = len(bin_nums) + 1
+    k = len(bin_nums[-1])
+
+    # everything is the same length now
+    bin_strs = []
+    for num in bin_nums:
+        s = '0' * (k - len(num)) + num[2:]
+        bin_strs.append(s)
+
+    def find_missing_helper(sub_set, col):
+
+        if col < 0:
+            return ''
+
+        zero_ending, one_ending = [], []
+
+        for num in sub_set:
+            if num[col] == '1':
+                one_ending.append(num)
+            else:
+                zero_ending.append(num)
+
+        s = None
+        if len(zero_ending) <= len(one_ending):
+            # we removed a zero
+            s = find_missing_helper(zero_ending, col - 1) + '0'
+        else:
+            # we removed a one
+            s = find_missing_helper(one_ending, col - 1) + '1'
+
+        return s
+
+
+    return int(find_missing_helper(bin_strs, k - 3), 2)
+
+#5.8 Draw a horizontal line across screen
+class Screen():
+
+    # draw horizontal line
+    def __init__(self, arr, width):
+        """
+        width in bytes
+        """
+        self.arr = arr
+        self.width = width // 8 # in bytes
+
+    def __str__(self):
+        full_s = ''
+        for i in range(len(self.arr) // self.width):
+            s = ''
+            for j in range(self.width):
+                val = bin(self.arr[(self.width * i) + j])[2:]
+                s += '0' * (8 - len(val)) + val + '  '
+            full_s += s + '\n'
+
+        return full_s
+    """
+    
+    16 bytes
+    width 16 bits
+    00000000 00000000
+    
+    """
+
+
+
+    def draw_horizontal_line(self, x1, x2, y):
+        row_bit_width = self.width
+        start = self.width * 8 * y
+        i = start + x1
+        print(i)
+        while i < start + x2 + 1:
+            curr = self.arr[i // 8]
+
+            mask = '0' * (i % 8) + '1' + '0' * (7 - i % 8)
+            self.arr[i // 8] = int(mask, 2) | self.arr[i // 8]
+
+            print(x1, x2, y, i)
+            print(self.arr)
+            i += 1
+
+
+
+
+
+
+
 
 
 # ================== utils =================== #
@@ -208,3 +318,27 @@ test(swap_even_odd(9), 6)
 test(swap_even_odd(6), 9)
 
 # 5.7
+nums = [0]
+bin_nums = [bin(n) for n in nums]
+test(find_missing(bin_nums), 1)
+nums = [1]
+bin_nums = [bin(n) for n in nums]
+test(find_missing(bin_nums), 0)
+nums = [1, 2, 3, 4, 5, 6]
+bin_nums = [bin(n) for n in nums]
+test(find_missing(bin_nums), 0)
+nums = [0, 1, 2, 3, 5, 6]
+bin_nums = [bin(n) for n in nums]
+test(find_missing(bin_nums), 4)
+
+# 5.8
+arr = [0x00 for _ in range(16)]
+width = 16
+screen = Screen(arr, width) #  8 rows of 16 pixels
+print(str(screen))
+screen.draw_horizontal_line(1, 6, 1)
+screen.draw_horizontal_line(3, 15, 4)
+screen.draw_horizontal_line(1, 3, 5)
+print(str(screen))
+
+
