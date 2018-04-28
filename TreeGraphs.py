@@ -10,7 +10,7 @@ class Tree():
         self.children = children
 
     def __str__(self):
-        return str(self.val) + '{ ' + str(self.children) + '} '
+        return str(self.val) + '{' + str(self.children) + '} '
 
 class DirectedGraph():
     def __init__(self, val=None, neighbors=[]):
@@ -31,7 +31,7 @@ class BinaryTree():
         self.rightChild = rightChild
 
     def __str__(self):
-        return str(self.val) + '{ ' + str(self.children) + '} '
+        return str(self.val) + ' {' + str(self.leftChild) + ' | ' + str(self.rightChild) + '} '
 
 
 # 4.1 is a Binary Tree Balanced - heights differ by no more than 1
@@ -110,7 +110,8 @@ def create_linked_lists(t):
 
     :param t:
     :return Linked List of Linked Lists:
-    pass the level
+    pass the level into the helper
+    because BFS, hitting new stuff means always new
     """
 
     def helper(tree_root, list_of_lists, level):
@@ -119,6 +120,8 @@ def create_linked_lists(t):
             return
 
         level_list = Link(None)
+        # level is ever too high???? then we need to add a new list
+        # and we are done with everything below
 
         if len(list_of_lists) >= level:
             # too big! level is not in list
@@ -137,8 +140,74 @@ def create_linked_lists(t):
     helper(t, sol, 0)
     return sol
 
-# 5.1
+# 4.5 is BST
 
+def isBST(tree):
+    """
+    :param tree:
+    :return bool:
+
+    you must be smaller than the min of your right child's tree
+    you must be larger than the max of your left child's tree
+
+       5
+     3   7
+    1   4 8
+
+    call a helper, that bubbles up a tuple with max, min
+    just return False if not balanced
+    overall is call helper on the root
+    """
+
+    MAX_INT = float('inf')
+    MIN_INT = -MAX_INT
+    print("problem: " + str(tree))
+
+    def max_min_bst(t):
+        """
+
+        :param t:
+        :return (min, max):
+        """
+        print("call on " + str(t))
+        if not t:
+            return (MAX_INT, MIN_INT)
+
+        left, right = None, None
+        if t.leftChild:
+            # check left side
+            left_call = max_min_bst(t.leftChild)
+            if left_call and t.val > t.leftChild.val and t.val > left_call[1]:
+                left = (left_call[0], t.val)
+
+        if t.rightChild:
+            # check the right side
+            right_call = max_min_bst(t.rightChild)
+            if right_call and t.val < t.rightChild.val and t.val < right_call[0]:
+                right = (t.val, right_call[1])
+
+        if t.leftChild and not t.rightChild:
+            return left
+
+        if t.rightChild and not t.leftChild:
+            return right
+
+        if not t.leftChild and not t.rightChild:
+            # leaf
+            sol = (t.val, t.val)
+            print(">>>>  " + str(sol))
+            return sol
+
+        else:
+            print("here")
+            print(str(left) + str(right))
+            # both children
+            if left and right and left[1] <= right[0]:
+                return (left[0], right[1])
+            else:
+                return None
+
+    return bool(max_min_bst(tree))
 
 
 # ================== utils =================== #
@@ -221,6 +290,7 @@ test(large_tree.leftChild.val, 17)
 # small_tree = create_minimal_BST(nums)
 # linked_lists = create_linked_lists(small_tree)
 # one = Link(1)
+# import pdb; pdb.set_trace()
 # test(Link.compare_to(linked_lists.val, one))
 # nums = [1, 2 ,3]
 # small_tree = create_minimal_BST(nums)
@@ -238,11 +308,28 @@ test(large_tree.leftChild.val, 17)
 # test(linked_lists.next.next.next.val.len(), 8)
 
 
-# 5.1 - bit insertion
-N = int('10000000000', 2)
-M = int('10011')
-i = 2
-j = 6
-output = int('10001001100', 2)
-test(bit_insertion(N, M, i, j), output)
-
+# 4.5 is BST
+t0 = BinaryTree(1)
+t1 = BinaryTree(2)
+t1.rightChild = BinaryTree(1)
+t1.leftChild = BinaryTree(3)
+t2 = BinaryTree(2)
+t2.rightChild = BinaryTree(3)
+t2.leftChild = BinaryTree(1)
+t3 = BinaryTree(5)
+t3.rightChild = BinaryTree(7)
+t3.leftChild = BinaryTree(3)
+t3.rightChild.rightChild = BinaryTree(8)
+t3.rightChild.leftChild = BinaryTree(6)
+t3.leftChild.leftChild = BinaryTree(2)
+t3.leftChild.rightChild = BinaryTree(4)
+t3.leftChild.leftChild.leftChild = BinaryTree(1)
+t4 = BinaryTree(2)
+t4.leftChild = BinaryTree(1)
+t4.leftChild.leftChild = BinaryTree(0)
+t4.leftChild.leftChild.rightChild = BinaryTree(4)
+test(isBST(t0))
+test(isBST(t1), False)
+test(isBST(t2))
+test(isBST(t3))
+test(isBST(t4), False)
