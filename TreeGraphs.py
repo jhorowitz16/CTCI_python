@@ -161,15 +161,14 @@ def isBST(tree):
 
     MAX_INT = float('inf')
     MIN_INT = -MAX_INT
-    print("problem: " + str(tree))
 
     def max_min_bst(t):
         """
 
         :param t:
         :return (min, max):
+        note - its ok for the root to be equal to the leftchild
         """
-        print("call on " + str(t))
         if not t:
             return (MAX_INT, MIN_INT)
 
@@ -195,12 +194,9 @@ def isBST(tree):
         if not t.leftChild and not t.rightChild:
             # leaf
             sol = (t.val, t.val)
-            print(">>>>  " + str(sol))
             return sol
 
         else:
-            print("here")
-            print(str(left) + str(right))
             # both children
             if left and right and left[1] <= right[0]:
                 return (left[0], right[1])
@@ -209,6 +205,27 @@ def isBST(tree):
 
     return bool(max_min_bst(tree))
 
+
+def clean_is_BST(tree):
+
+    def is_BST(t, min_val, max_val):
+        """
+        :param t:
+        :param min_val:
+        :param max_val:
+        :return if everything is between min and max val:
+        """
+        if not t:
+            return True
+        if t.val >= max_val or t.val < min_val:
+            return False
+        left = is_BST(t.leftChild, min_val, t.val)
+        right = is_BST(t.rightChild, t.val, max_val)
+        if left and right:
+            return True
+        return False
+
+    return is_BST(tree, -float('inf'), float('inf'))
 
 # ================== utils =================== #
 
@@ -328,6 +345,13 @@ t4 = BinaryTree(2)
 t4.leftChild = BinaryTree(1)
 t4.leftChild.leftChild = BinaryTree(0)
 t4.leftChild.leftChild.rightChild = BinaryTree(4)
+test(isBST(t0))
+test(isBST(t1), False)
+test(isBST(t2))
+test(isBST(t3))
+test(isBST(t4), False)
+
+isBST = clean_is_BST
 test(isBST(t0))
 test(isBST(t1), False)
 test(isBST(t2))
