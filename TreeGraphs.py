@@ -205,6 +205,20 @@ def isBST(tree):
 
     return bool(max_min_bst(tree))
 
+# 4.6 next node in BST
+def next_node(tree):
+    """
+    if you have a right child - go the smallest of that
+    if you you don't?
+        are you a left child?
+            return your parent
+        ... ur the biggest return None
+    :param tree:
+    :return BinaryTree:
+    """
+    return tree
+
+
 
 def clean_is_BST(tree):
 
@@ -357,3 +371,15 @@ test(isBST(t1), False)
 test(isBST(t2))
 test(isBST(t3))
 test(isBST(t4), False)
+
+# 4.6 next node in BST
+node = t3.leftChild
+next = next_node(node)
+nextnext = next_node(next)
+nextnextnext = next_node(nextnext)
+nextnextnextnext = next_node(nextnextnext)
+test(node.val, 3)
+test(next.val, 4)
+test(nextnext.val, 5)
+test(nextnextnext.val, 6)
+test(nextnextnextnext.val, 7)
